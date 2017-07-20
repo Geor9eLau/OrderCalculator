@@ -55,7 +55,7 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
     let columnTextFiledOriginTag = 8888
     fileprivate var columnRatio: [CGFloat] = []
     var hasLoaded: Bool = false
-    var delegate: GLFormCellDelegate?
+    weak var delegate: GLFormCellDelegate?
     var indexPath: IndexPath!
     var isHeader: Bool = false
     fileprivate var goodsRecord = Goods.default
@@ -193,7 +193,8 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
 // MARK: - GLTextFieldDelegate
 extension GLFormCell {
     internal func textFieldDidTapNextButton(_ textField: GLTextField) {
-        if goodsRecord.name.characters.count == 0 {
+        if textField.tag - columnTextFiledOriginTag == 0
+            && goodsRecord.name.characters.count == 0 {
             GLAlertView.show("商品名称不能为空!")
             return
         }
@@ -269,7 +270,7 @@ protocol GLFormHeaderDelegate: class{
 class GLFormHeader: UIView {
     weak var delegate: GLFormHeaderDelegate?
     private lazy var totalLabel: UILabel = {
-        let totalLabel = UILabel(frame: CGRect(x: self.frame.width / 2 + self.frame.width / 4, y: 0, width: (self.frame.width / 4 - 50), height: self.frame.height))
+        let totalLabel = UILabel(frame: CGRect(x: self.frame.width / 2 + self.frame.width / 4 - 20, y: 0, width: (self.frame.width / 4), height: self.frame.height))
         totalLabel.text = "金额:"
         totalLabel.textColor = UIColor.black
         totalLabel.textAlignment = .left

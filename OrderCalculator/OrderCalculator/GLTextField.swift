@@ -32,26 +32,24 @@ class GLTextField: UITextField, UITextFieldDelegate {
     }
 
     private func addTool() {
-        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: frame.width, height: 35))
+        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: frame.width, height: 40))
         toolBar.tintColor = UIColor.black
         toolBar.backgroundColor = UIColor.gray
         let previousBtn = UIBarButtonItem(title: "上一步", style: .plain, target: self, action: #selector(previousBtnDidClicked))
-        previousBtn.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: 15)], for: .normal)
-        previousBtn.setTitlePositionAdjustment(UIOffset(horizontal: 0, vertical: 5) , for: .default)
+        previousBtn.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: 18)], for: .normal)
         
         
         let nextBtn = UIBarButtonItem(title: "下一步", style: .plain, target: self, action: #selector(nextBtnDidClicked))
-        nextBtn.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: 15)], for: .normal)
-        nextBtn.setTitlePositionAdjustment(UIOffset(horizontal: 0, vertical: 2.5) , for: .default)
+        nextBtn.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: 18)], for: .normal)
 
         
         let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace , target: nil, action: nil)
 
         let finishBtn = UIBarButtonItem(title: "完成", style: .plain, target: self, action: #selector(finishBtnDidClicked))
-        finishBtn.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: 15)], for: .normal)
-        finishBtn.setTitlePositionAdjustment(UIOffset(horizontal: 0, vertical: -2.5) , for: .default)
+        finishBtn.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: 18)], for: .normal)
+
         
-        toolBar.items = [space, previousBtn, space, nextBtn, space, space, space, space, space, space, finishBtn]
+        toolBar.items = [space, previousBtn, space, space, nextBtn, space, space, space, space, space, space, space, finishBtn]
         inputAccessoryView = toolBar
     }
     
