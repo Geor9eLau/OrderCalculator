@@ -9,42 +9,7 @@
 import UIKit
 
 
-struct Goods: Equatable {
-    var name: String
-    var specification: String
-    var amount: Int
-    var price: Float
-    var frequency: Int
-    var id: String = ""
-    
-    public static func ==(lhs: Goods, rhs: Goods) -> Bool{
-        return lhs.id == rhs.id
-    }
-    
-    static let `default` = Goods(name: "", specification: "", amount: 0, price: 0, frequency: 0, id: "")
-    
-    subscript(index: Int) -> String {
-        switch index{
-        case 0: return name
-        case 1: return specification
-        case 2: return amount == 0 ? "" : "\(amount)"
-        case 3: return price == 0 ? "" : "\(price)"
-        default: return ""
-        }
-    }
-    
-    mutating func update(type: Int, content: String) {
-        switch type {
-        case 0: name = content
-        case 1: specification = content
-        case 2: amount = Int(content)!
-        case 3: price = Float(content)!
-        default: break
-        }
-    }
-    
-    
-}
+
 
 protocol GLFormCellDelegate: class {
     func recordDone(_ indexPath: IndexPath, _ goodsRecord: Goods)
@@ -135,18 +100,6 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
                 addSubview(dividedLine)
             }
         }
-//        let horizontalDividedLine = UIView(frame: CGRect(x: 0, y: height - 1, width: width, height: 1))
-//        horizontalDividedLine.backgroundColor = UIColor.black
-//        
-//        let leftDividedLine = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: frame.height))
-//        leftDividedLine.backgroundColor = UIColor.black
-//        
-//        let rightDividedLine = UIView(frame: CGRect(x: frame.width - 1, y: 0, width: 1, height: frame.height))
-//        rightDividedLine.backgroundColor = UIColor.black
-//        
-//        addSubview(horizontalDividedLine)
-//        addSubview(leftDividedLine)
-//        addSubview(rightDividedLine)
         hasLoaded = true
     }
     
@@ -161,6 +114,8 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
                 tmpTf.text = goodsRecord[index]
             }
         }
+        
+        
     }
     
     
@@ -194,17 +149,17 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
 extension GLFormCell {
     internal func textFieldDidTapNextButton(_ textField: GLTextField) {
         if textField.tag - columnTextFiledOriginTag == 0
-            && goodsRecord.name.characters.count == 0 {
+            && textField.text?.characters.count == 0 {
             GLAlertView.show("商品名称不能为空!")
             return
         }
         
         if textField.tag + 1 - columnTextFiledOriginTag < columnRatio.count,
             let tf = viewWithTag(textField.tag + 1) as? GLTextField{
-            tf.becomeFirstResponder()
             if (textField.text?.characters.count)! > 0 {
                 goodsRecord.update(type: textField.tag - columnTextFiledOriginTag, content: textField.text!)
             }
+            tf.becomeFirstResponder()
         }
     }
     
@@ -342,7 +297,7 @@ class GLFormHeader: UIView {
 protocol GLFormDelegate: class {
     func gotoNextForm(_ form: GLForm)
     func gotoPreviousForm(_ form: GLForm)
-    func print(_ form: GLForm)
+    func printForm(_ form: GLForm)
 }
 
 
@@ -350,14 +305,10 @@ protocol GLFormDelegate: class {
 class GLForm: UITableView, UITableViewDelegate, UITableViewDataSource, GLFormCellDelegate, GLFormHeaderDelegate {
     
     weak var formDelegate: GLFormDelegate?
+    var formRecord = FormRecord(id: GLDataManager.sharedInstance.getCurrentFormRecordId(), recordData: [])
     fileprivate let defaultLine: Int = 8
     /// The sum of the array is required to equal to 12
     fileprivate var columnRatio: [CGFloat]
-    fileprivate var goodsDataSource: [Goods] = [] {
-        didSet {
-            reloadData()
-        }
-    }
     
     fileprivate lazy var formHeader: GLFormHeader = {
        let header = GLFormHeader(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 44))
@@ -390,17 +341,23 @@ class GLForm: UITableView, UITableViewDelegate, UITableViewDataSource, GLFormCel
         fatalError("init(coder:) has not been implemented")
     }
     
-    func reload() {
+    func updateRecord(_ formRecord: FormRecord) {
+        self.formRecord = formRecord
         reloadData()
+        formHeader.updateTotal(formRecord.recordData.total())
+        if formRecord.recordData.count == 0 ,
+           let cell = cellForRow(at: IndexPath(row: 0, section: 0)) as? GLFormCell {
+            cell.turnToBeFirstResponder()
+        }
     }
 }
 // MARK: - UITableViewDelegate
 extension GLForm {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60;
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    internal func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = GLFormCell(frame: CGRect(x: 0, y: 0, width: frame.width, height: 60 ))
         header.isHeader = true
         header.backgroundColor = UIColor.white
@@ -410,24 +367,24 @@ extension GLForm {
         return header
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    internal func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 60
     }
 }
 
 // MARK: - UITalbleViewDataSurce
 extension GLForm {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return goodsDataSource.count > defaultLine ? goodsDataSource.count + 1 : defaultLine
+    internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return formRecord.recordData.count > defaultLine ? formRecord.recordData.count + 1 : defaultLine
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell  = tableView.dequeueReusableCell(withIdentifier: "FORMCELL", for: indexPath) as! GLFormCell
         if cell.hasLoaded == false {
             cell.loadContentView(with: columnRatio, keyboardType:[.default, .default, .decimalPad, .decimalPad])
         }
-        if goodsDataSource.count > indexPath.row {
-            cell.loadRecord(goodsDataSource[indexPath.row])
+        if formRecord.recordData.count > indexPath.row {
+            cell.loadRecord(formRecord.recordData[indexPath.row])
         } else {
             cell.loadRecord()
         }
@@ -440,7 +397,7 @@ extension GLForm {
 
 // MARK: - UIScrollViewDelegate
 extension GLForm {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    internal func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let firstResponder = UIApplication.shared.keyWindow?.perform(NSSelectorFromString("firstResponder")),
             let currentTf = firstResponder.takeRetainedValue() as? UITextField {
             currentTf.resignFirstResponder()
@@ -450,21 +407,21 @@ extension GLForm {
 
 // MARK: - GLFormHeaderDelegate
 extension GLForm {
-    func previousButtonDidTapped(_ header: GLFormHeader) {
+    internal func previousButtonDidTapped(_ header: GLFormHeader) {
         if formDelegate != nil {
             formDelegate!.gotoPreviousForm(self)
         }
     }
     
-    func nextButtonDidTapped(_ header: GLFormHeader) {
+    internal func nextButtonDidTapped(_ header: GLFormHeader) {
         if formDelegate != nil {
             formDelegate!.gotoNextForm(self)
         }
     }
     
-    func printButtonDidTapped(_ header: GLFormHeader) {
+    internal func printButtonDidTapped(_ header: GLFormHeader) {
         if formDelegate != nil {
-            formDelegate!.print(self)
+            formDelegate!.printForm(self)
         }
     }
 }
@@ -473,12 +430,12 @@ extension GLForm {
 // MARK: - GLFormCellDelegate
 extension GLForm {
     func recordDone(_ indexPath: IndexPath, _ goodsRecord: Goods) {
-        if goodsDataSource.contains(goodsRecord){
-            goodsDataSource.update(goodsRecord)
+        if formRecord.recordData.contains(goodsRecord){
+            formRecord.recordData.update(goodsRecord)
         } else {
-            goodsDataSource.append(goodsRecord)
+            formRecord.recordData.append(goodsRecord)
         }
-        formHeader.updateTotal(goodsDataSource.total())
+        formHeader.updateTotal(formRecord.recordData.total())
         reloadRows(at: [indexPath], with: .none)
         
         let nextCellIndexPath = IndexPath(row: indexPath.row + 1, section: indexPath.section)
