@@ -11,12 +11,8 @@
 		5E83C0871F20404000EEF1F0 /* GLAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E83C0861F20404000EEF1F0 /* GLAlertView.swift */; };
 		5E83C0891F20415200EEF1F0 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E83C0881F20415200EEF1F0 /* Global.swift */; };
 		5E83C08B1F2066AA00EEF1F0 /* GLDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E83C08A1F2066AA00EEF1F0 /* GLDataManager.swift */; };
-		5E83C0A41F20E7C600EEF1F0 /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E83C0971F20E79300EEF1F0 /* SQLite.framework */; };
-		5E83C0A51F20E7C600EEF1F0 /* SQLite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5E83C0971F20E79300EEF1F0 /* SQLite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5E83C0AB1F20EBD300EEF1F0 /* Goods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E83C0AA1F20EBD300EEF1F0 /* Goods.swift */; };
 		5E83C0AD1F20EBF300EEF1F0 /* FormRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E83C0AC1F20EBF300EEF1F0 /* FormRecord.swift */; };
-		5E83C0FD1F20F00B00EEF1F0 /* HandyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E83C0EE1F20EFFC00EEF1F0 /* HandyJSON.framework */; };
-		5E83C0FE1F20F00B00EEF1F0 /* HandyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5E83C0EE1F20EFFC00EEF1F0 /* HandyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5EBA95B21F1DA42700C49030 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBA95B11F1DA42700C49030 /* AppDelegate.swift */; };
 		5EBA95B41F1DA42700C49030 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBA95B31F1DA42700C49030 /* ViewController.swift */; };
 		5EBA95B71F1DA42700C49030 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EBA95B51F1DA42700C49030 /* Main.storyboard */; };
@@ -24,129 +20,8 @@
 		5EBA95BC1F1DA42700C49030 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EBA95BA1F1DA42700C49030 /* LaunchScreen.storyboard */; };
 		5EBA95C41F1DA47400C49030 /* GLForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBA95C31F1DA47400C49030 /* GLForm.swift */; };
 		5EBA95C61F1EF3B000C49030 /* GLTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBA95C51F1EF3B000C49030 /* GLTextField.swift */; };
+		9D912EB3C76770172722DE76 /* Pods_OrderCalculator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD7BF02FEF72DFE2111533BB /* Pods_OrderCalculator.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		5E83C0961F20E79300EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C08C1F20E79300EEF1F0 /* SQLite.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EE247AD31C3F04ED00AE3E12;
-			remoteInfo = "SQLite iOS";
-		};
-		5E83C0981F20E79300EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C08C1F20E79300EEF1F0 /* SQLite.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EE247ADD1C3F04ED00AE3E12;
-			remoteInfo = "SQLiteTests iOS";
-		};
-		5E83C09A1F20E79300EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C08C1F20E79300EEF1F0 /* SQLite.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EE247B3C1C3F3ED000AE3E12;
-			remoteInfo = "SQLite Mac";
-		};
-		5E83C09C1F20E79300EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C08C1F20E79300EEF1F0 /* SQLite.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EE247B451C3F3ED000AE3E12;
-			remoteInfo = "SQLiteTests Mac";
-		};
-		5E83C09E1F20E79300EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C08C1F20E79300EEF1F0 /* SQLite.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 03A65E5A1C6BB0F50062603F;
-			remoteInfo = "SQLite tvOS";
-		};
-		5E83C0A01F20E79300EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C08C1F20E79300EEF1F0 /* SQLite.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 03A65E631C6BB0F60062603F;
-			remoteInfo = "SQLiteTests tvOS";
-		};
-		5E83C0A21F20E79300EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C08C1F20E79300EEF1F0 /* SQLite.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A121AC451CA35C79005A31D1;
-			remoteInfo = "SQLite watchOS";
-		};
-		5E83C0A61F20E7C600EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C08C1F20E79300EEF1F0 /* SQLite.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = EE247AD21C3F04ED00AE3E12;
-			remoteInfo = "SQLite iOS";
-		};
-		5E83C0ED1F20EFFC00EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C0AE1F20EFE500EEF1F0 /* HandyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 21520C441D3341B200F53111;
-			remoteInfo = "HandyJSON iOS";
-		};
-		5E83C0EF1F20EFFC00EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C0AE1F20EFE500EEF1F0 /* HandyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 21520C5B1D3344A900F53111;
-			remoteInfo = HandyJSONDemo;
-		};
-		5E83C0F11F20EFFC00EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C0AE1F20EFE500EEF1F0 /* HandyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 217B046D1D571B9F0035A8E2;
-			remoteInfo = "HandyJSON iOS Tests";
-		};
-		5E83C0F31F20EFFC00EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C0AE1F20EFE500EEF1F0 /* HandyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 393E0F9B1DA1650E00B3BC12;
-			remoteInfo = "HandyJSON watchOS";
-		};
-		5E83C0F51F20EFFC00EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C0AE1F20EFE500EEF1F0 /* HandyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 393E0FB11DA2441E00B3BC12;
-			remoteInfo = "HandyJSON tvOS";
-		};
-		5E83C0F71F20EFFC00EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C0AE1F20EFE500EEF1F0 /* HandyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 393E0FB91DA2441E00B3BC12;
-			remoteInfo = "HandyJSON tvOS Tests";
-		};
-		5E83C0F91F20EFFC00EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C0AE1F20EFE500EEF1F0 /* HandyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 393E0FE11DA2494F00B3BC12;
-			remoteInfo = "HandyJSON macOS";
-		};
-		5E83C0FB1F20EFFC00EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C0AE1F20EFE500EEF1F0 /* HandyJSON.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 393E0FE91DA2494F00B3BC12;
-			remoteInfo = "HandyJSON macOS Tests";
-		};
-		5E83C0FF1F20F00B00EEF1F0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E83C0AE1F20EFE500EEF1F0 /* HandyJSON.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 21520C431D3341B200F53111;
-			remoteInfo = "HandyJSON iOS";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		5E83C0A81F20E7C600EEF1F0 /* Embed Frameworks */ = {
@@ -155,8 +30,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5E83C0A51F20E7C600EEF1F0 /* SQLite.framework in Embed Frameworks */,
-				5E83C0FE1F20F00B00EEF1F0 /* HandyJSON.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -168,10 +41,8 @@
 		5E83C0861F20404000EEF1F0 /* GLAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLAlertView.swift; sourceTree = "<group>"; };
 		5E83C0881F20415200EEF1F0 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		5E83C08A1F2066AA00EEF1F0 /* GLDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLDataManager.swift; sourceTree = "<group>"; };
-		5E83C08C1F20E79300EEF1F0 /* SQLite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SQLite.xcodeproj; path = "../../Downloads/SQLite.swift-master/SQLite.xcodeproj"; sourceTree = "<group>"; };
 		5E83C0AA1F20EBD300EEF1F0 /* Goods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Goods.swift; sourceTree = "<group>"; };
 		5E83C0AC1F20EBF300EEF1F0 /* FormRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormRecord.swift; sourceTree = "<group>"; };
-		5E83C0AE1F20EFE500EEF1F0 /* HandyJSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = HandyJSON.xcodeproj; path = "../../Downloads/HandyJSON-master/HandyJSON.xcodeproj"; sourceTree = "<group>"; };
 		5EBA95AE1F1DA42700C49030 /* OrderCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OrderCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EBA95B11F1DA42700C49030 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5EBA95B31F1DA42700C49030 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -181,6 +52,9 @@
 		5EBA95BD1F1DA42700C49030 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5EBA95C31F1DA47400C49030 /* GLForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLForm.swift; sourceTree = "<group>"; };
 		5EBA95C51F1EF3B000C49030 /* GLTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLTextField.swift; sourceTree = "<group>"; };
+		76C47A5E61906ACF275908C8 /* Pods-OrderCalculator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrderCalculator.release.xcconfig"; path = "Pods/Target Support Files/Pods-OrderCalculator/Pods-OrderCalculator.release.xcconfig"; sourceTree = "<group>"; };
+		AD7BF02FEF72DFE2111533BB /* Pods_OrderCalculator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OrderCalculator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5F98CB9F13E14576DB1ABB0 /* Pods-OrderCalculator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OrderCalculator.debug.xcconfig"; path = "Pods/Target Support Files/Pods-OrderCalculator/Pods-OrderCalculator.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,26 +62,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5E83C0A41F20E7C600EEF1F0 /* SQLite.framework in Frameworks */,
-				5E83C0FD1F20F00B00EEF1F0 /* HandyJSON.framework in Frameworks */,
+				9D912EB3C76770172722DE76 /* Pods_OrderCalculator.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5E83C08D1F20E79300EEF1F0 /* Products */ = {
+		045D853BC8388121CD3E594E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5E83C0971F20E79300EEF1F0 /* SQLite.framework */,
-				5E83C0991F20E79300EEF1F0 /* SQLiteTests iOS.xctest */,
-				5E83C09B1F20E79300EEF1F0 /* SQLite.framework */,
-				5E83C09D1F20E79300EEF1F0 /* SQLiteTests Mac.xctest */,
-				5E83C09F1F20E79300EEF1F0 /* SQLite.framework */,
-				5E83C0A11F20E79300EEF1F0 /* SQLiteTests tvOS.xctest */,
-				5E83C0A31F20E79300EEF1F0 /* SQLite.framework */,
+				AD7BF02FEF72DFE2111533BB /* Pods_OrderCalculator.framework */,
 			);
-			name = Products;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		5E83C0A91F20EBC800EEF1F0 /* Model */ = {
@@ -217,21 +84,6 @@
 				5E83C0AC1F20EBF300EEF1F0 /* FormRecord.swift */,
 			);
 			name = Model;
-			sourceTree = "<group>";
-		};
-		5E83C0E31F20EFFC00EEF1F0 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				5E83C0EE1F20EFFC00EEF1F0 /* HandyJSON.framework */,
-				5E83C0F01F20EFFC00EEF1F0 /* HandyJSONDemo.app */,
-				5E83C0F21F20EFFC00EEF1F0 /* HandyJSON iOS Tests.xctest */,
-				5E83C0F41F20EFFC00EEF1F0 /* HandyJSON.framework */,
-				5E83C0F61F20EFFC00EEF1F0 /* HandyJSON.framework */,
-				5E83C0F81F20EFFC00EEF1F0 /* HandyJSON tvOS Tests.xctest */,
-				5E83C0FA1F20EFFC00EEF1F0 /* HandyJSON.framework */,
-				5E83C0FC1F20EFFC00EEF1F0 /* HandyJSON macOS Tests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		5E83C12A1F219F5600EEF1F0 /* View */ = {
@@ -273,8 +125,8 @@
 			children = (
 				5EBA95B01F1DA42700C49030 /* OrderCalculator */,
 				5EBA95AF1F1DA42700C49030 /* Products */,
-				5E83C0AE1F20EFE500EEF1F0 /* HandyJSON.xcodeproj */,
-				5E83C08C1F20E79300EEF1F0 /* SQLite.xcodeproj */,
+				981DE26F0A5602BAE3AE9F50 /* Pods */,
+				045D853BC8388121CD3E594E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -304,6 +156,15 @@
 			path = OrderCalculator;
 			sourceTree = "<group>";
 		};
+		981DE26F0A5602BAE3AE9F50 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F5F98CB9F13E14576DB1ABB0 /* Pods-OrderCalculator.debug.xcconfig */,
+				76C47A5E61906ACF275908C8 /* Pods-OrderCalculator.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -311,16 +172,17 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5EBA95C01F1DA42700C49030 /* Build configuration list for PBXNativeTarget "OrderCalculator" */;
 			buildPhases = (
+				CC035D7B9CFDE4BA559CC574 /* [CP] Check Pods Manifest.lock */,
 				5EBA95AA1F1DA42700C49030 /* Sources */,
 				5EBA95AB1F1DA42700C49030 /* Frameworks */,
 				5EBA95AC1F1DA42700C49030 /* Resources */,
 				5E83C0A81F20E7C600EEF1F0 /* Embed Frameworks */,
+				5297B124CCE561A5FB686A6A /* [CP] Embed Pods Frameworks */,
+				F748A24561CA3227CE0DD621 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				5E83C0A71F20E7C600EEF1F0 /* PBXTargetDependency */,
-				5E83C1001F20F00B00EEF1F0 /* PBXTargetDependency */,
 			);
 			name = OrderCalculator;
 			productName = OrderCalculator;
@@ -355,130 +217,12 @@
 			mainGroup = 5EBA95A51F1DA42700C49030;
 			productRefGroup = 5EBA95AF1F1DA42700C49030 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 5E83C0E31F20EFFC00EEF1F0 /* Products */;
-					ProjectRef = 5E83C0AE1F20EFE500EEF1F0 /* HandyJSON.xcodeproj */;
-				},
-				{
-					ProductGroup = 5E83C08D1F20E79300EEF1F0 /* Products */;
-					ProjectRef = 5E83C08C1F20E79300EEF1F0 /* SQLite.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				5EBA95AD1F1DA42700C49030 /* OrderCalculator */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		5E83C0971F20E79300EEF1F0 /* SQLite.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SQLite.framework;
-			remoteRef = 5E83C0961F20E79300EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C0991F20E79300EEF1F0 /* SQLiteTests iOS.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "SQLiteTests iOS.xctest";
-			remoteRef = 5E83C0981F20E79300EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C09B1F20E79300EEF1F0 /* SQLite.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SQLite.framework;
-			remoteRef = 5E83C09A1F20E79300EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C09D1F20E79300EEF1F0 /* SQLiteTests Mac.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "SQLiteTests Mac.xctest";
-			remoteRef = 5E83C09C1F20E79300EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C09F1F20E79300EEF1F0 /* SQLite.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SQLite.framework;
-			remoteRef = 5E83C09E1F20E79300EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C0A11F20E79300EEF1F0 /* SQLiteTests tvOS.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "SQLiteTests tvOS.xctest";
-			remoteRef = 5E83C0A01F20E79300EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C0A31F20E79300EEF1F0 /* SQLite.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SQLite.framework;
-			remoteRef = 5E83C0A21F20E79300EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C0EE1F20EFFC00EEF1F0 /* HandyJSON.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = HandyJSON.framework;
-			remoteRef = 5E83C0ED1F20EFFC00EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C0F01F20EFFC00EEF1F0 /* HandyJSONDemo.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = HandyJSONDemo.app;
-			remoteRef = 5E83C0EF1F20EFFC00EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C0F21F20EFFC00EEF1F0 /* HandyJSON iOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "HandyJSON iOS Tests.xctest";
-			remoteRef = 5E83C0F11F20EFFC00EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C0F41F20EFFC00EEF1F0 /* HandyJSON.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = HandyJSON.framework;
-			remoteRef = 5E83C0F31F20EFFC00EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C0F61F20EFFC00EEF1F0 /* HandyJSON.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = HandyJSON.framework;
-			remoteRef = 5E83C0F51F20EFFC00EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C0F81F20EFFC00EEF1F0 /* HandyJSON tvOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "HandyJSON tvOS Tests.xctest";
-			remoteRef = 5E83C0F71F20EFFC00EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C0FA1F20EFFC00EEF1F0 /* HandyJSON.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = HandyJSON.framework;
-			remoteRef = 5E83C0F91F20EFFC00EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5E83C0FC1F20EFFC00EEF1F0 /* HandyJSON macOS Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "HandyJSON macOS Tests.xctest";
-			remoteRef = 5E83C0FB1F20EFFC00EEF1F0 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		5EBA95AC1F1DA42700C49030 /* Resources */ = {
@@ -492,6 +236,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5297B124CCE561A5FB686A6A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OrderCalculator/Pods-OrderCalculator-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CC035D7B9CFDE4BA559CC574 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		F748A24561CA3227CE0DD621 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-OrderCalculator/Pods-OrderCalculator-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5EBA95AA1F1DA42700C49030 /* Sources */ = {
@@ -512,19 +304,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		5E83C0A71F20E7C600EEF1F0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "SQLite iOS";
-			targetProxy = 5E83C0A61F20E7C600EEF1F0 /* PBXContainerItemProxy */;
-		};
-		5E83C1001F20F00B00EEF1F0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "HandyJSON iOS";
-			targetProxy = 5E83C0FF1F20F00B00EEF1F0 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		5EBA95B51F1DA42700C49030 /* Main.storyboard */ = {
@@ -641,6 +420,7 @@
 		};
 		5EBA95C11F1DA42700C49030 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F5F98CB9F13E14576DB1ABB0 /* Pods-OrderCalculator.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -656,6 +436,7 @@
 		};
 		5EBA95C21F1DA42700C49030 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 76C47A5E61906ACF275908C8 /* Pods-OrderCalculator.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

@@ -573,7 +573,7 @@ extension GLForm {
         updateGoodsRecord(goodsRecord)
 //        reloadRows(at: [cell.indexPath], with: .none)
         formHeader.updateTotal(formRecord.recordData.total())
-        reloadData()
+//        reloadData()
         
         let nextCellIndexPath = IndexPath(row: cell.indexPath.row + 1, section: cell.indexPath.section)
         if let cell = cellForRow(at: nextCellIndexPath) as? GLFormCell {
