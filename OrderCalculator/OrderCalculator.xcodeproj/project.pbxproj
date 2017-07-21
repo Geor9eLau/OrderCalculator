@@ -234,6 +234,40 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		5E83C12A1F219F5600EEF1F0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				5EBA95C31F1DA47400C49030 /* GLForm.swift */,
+				5EBA95C51F1EF3B000C49030 /* GLTextField.swift */,
+				5E83C0861F20404000EEF1F0 /* GLAlertView.swift */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		5E83C12B1F219F7100EEF1F0 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				5E83C08A1F2066AA00EEF1F0 /* GLDataManager.swift */,
+			);
+			name = Data;
+			sourceTree = "<group>";
+		};
+		5E83C12C1F219F8700EEF1F0 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				5E83C0841F1F0B9900EEF1F0 /* Extension.swift */,
+			);
+			name = Extension;
+			sourceTree = "<group>";
+		};
+		5E83C12D1F219F9D00EEF1F0 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				5EBA95B31F1DA42700C49030 /* ViewController.swift */,
+			);
+			name = ViewController;
+			sourceTree = "<group>";
+		};
 		5EBA95A51F1DA42700C49030 = {
 			isa = PBXGroup;
 			children = (
@@ -255,14 +289,12 @@
 		5EBA95B01F1DA42700C49030 /* OrderCalculator */ = {
 			isa = PBXGroup;
 			children = (
+				5E83C12C1F219F8700EEF1F0 /* Extension */,
+				5E83C12A1F219F5600EEF1F0 /* View */,
+				5E83C12B1F219F7100EEF1F0 /* Data */,
 				5E83C0A91F20EBC800EEF1F0 /* Model */,
+				5E83C12D1F219F9D00EEF1F0 /* ViewController */,
 				5EBA95B11F1DA42700C49030 /* AppDelegate.swift */,
-				5EBA95B31F1DA42700C49030 /* ViewController.swift */,
-				5EBA95C31F1DA47400C49030 /* GLForm.swift */,
-				5EBA95C51F1EF3B000C49030 /* GLTextField.swift */,
-				5E83C0841F1F0B9900EEF1F0 /* Extension.swift */,
-				5E83C0861F20404000EEF1F0 /* GLAlertView.swift */,
-				5E83C08A1F2066AA00EEF1F0 /* GLDataManager.swift */,
 				5E83C0881F20415200EEF1F0 /* Global.swift */,
 				5EBA95B51F1DA42700C49030 /* Main.storyboard */,
 				5EBA95B81F1DA42700C49030 /* Assets.xcassets */,

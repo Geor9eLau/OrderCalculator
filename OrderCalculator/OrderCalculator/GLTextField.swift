@@ -14,6 +14,7 @@ protocol GLTextFieldDelegate: class {
     func textFieldDidTapFinishButton(_ textField: GLTextField)
     func textFieldShouldTapReturn(_ textField: GLTextField) -> Bool
     func textFieldShouldStartEditing(_ textField: GLTextField) -> Bool
+    func textFieldDidFinishEnditing(_ textField: GLTextField)
 }
 
 class GLTextField: UITextField, UITextFieldDelegate {
@@ -88,6 +89,13 @@ extension GLTextField {
         }
         return true
     }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if gl_delegate != nil {
+            return gl_delegate!.textFieldDidFinishEnditing(self)
+        }
+    }
+    
 }
 
 

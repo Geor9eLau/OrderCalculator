@@ -12,7 +12,7 @@ import HandyJSON
 
 class GLDataManager: NSObject {
     static let sharedInstance: GLDataManager = {
-       return GLDataManager()
+        return GLDataManager()
     }()
     
     fileprivate var database: Connection?
@@ -20,13 +20,16 @@ class GLDataManager: NSObject {
     fileprivate let formId = Expression<Int>("id")
     fileprivate let recordData = Expression<Blob>("recordData")
     
+    fileprivate let goodsNameRecordTable = Table("GoodsName")
+    fileprivate let goodsName = Expression<String>("name")
+    fileprivate let frequency = Expression<Int>("frequency")
     
     private override init() {
         super.init()
         let path = NSSearchPathForDirectoriesInDomains(
             .documentDirectory, .userDomainMask, true
             ).first!
-        
+        print(path)
         do {
             database = try Connection("\(path)/db.sqlite3")
         } catch let error {
@@ -42,9 +45,23 @@ class GLDataManager: NSObject {
         } catch let error {
             print(error)
         }
+        
+        do {
+            try database!.run(goodsNameRecordTable.create(ifNotExists: true, block: { (t) in
+                t.column(goodsName, primaryKey: true)
+                t.column(frequency)
+            }))
+        } catch let error {
+            print(error)
+        }
     }
     
     
+    
+}
+
+// MARK: - 订单相关
+extension GLDataManager{
     func updateFormRecord(_ formRecord: FormRecord) {
         if let jsonStr = formRecord.recordData.toJSONString(),
             let data = jsonStr.data(using: .utf8) {
@@ -79,9 +96,9 @@ class GLDataManager: NSObject {
             if let record = try database?.prepare(formRecordTable.filter(formId == currentFormId - 1)).first(where: {_ in return true}),
                 let jsonStr = String(data: Data(bytes: record.get(recordData).bytes), encoding: .utf8),
                 let formRecordata = [Goods].deserialize(from: jsonStr)
-                {
+            {
                 let formRecordId = record.get(formId)
-                    return FormRecord(id: formRecordId, recordData: formRecordata as! [Goods])
+                return FormRecord(id: formRecordId, recordData: formRecordata as! [Goods])
                 
             }else{
                 return nil
@@ -112,6 +129,54 @@ class GLDataManager: NSObject {
         }
         return nil
     }
+}
+
+// MARK: - 商品相关
+extension GLDataManager{
+    func updateGoodsNameRecord(_ name: String) {
+        do {
+            if let result = try database?.prepare(goodsNameRecordTable.filter(goodsName == name)).first(where: {$0.get(goodsName) == name}){
+                let n = result.get(goodsName)
+                let f = result.get(frequency)
+                insertOrReplaceGoodsNameRecord(GoodsNameRecord(name: n, frequency: f) )
+            } else {
+                insertOrReplaceGoodsNameRecord(GoodsNameRecord(name: name, frequency: 1))
+            }
+        }
+        catch let error {
+            print(error)
+        }
+    }
     
+     fileprivate func insertOrReplaceGoodsNameRecord(_ goodsNameRecord: GoodsNameRecord) {
+        do{
+            try database?.run(goodsNameRecordTable.insert(or: .replace, goodsName <- goodsNameRecord.name,
+                                                     frequency <- goodsNameRecord.frequency))
+        }
+        catch let error {
+            print(error)
+        }
+    }
+    
+    func getLikelyGoodsName(_ keyword: String) -> [GoodsNameRecord]? {
+        do{
+            if let result = try database?.prepare(goodsNameRecordTable.filter(goodsName.like(keyword)).order(frequency.desc).limit(5)){
+                var recordArr: [GoodsNameRecord] = []
+                for record in result {
+                    let name = record.get(goodsName)
+                    let f = record.get(frequency)
+                    let nameRecord = GoodsNameRecord(name: name, frequency: f)
+                    recordArr.append(nameRecord)
+                }
+                return recordArr
+            }
+            return nil
+        }
+        catch let error {
+            print(error)
+        }
+        return nil
+    }
     
 }
+

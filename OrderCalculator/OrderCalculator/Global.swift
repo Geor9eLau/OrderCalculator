@@ -12,4 +12,5 @@ import UIKit
 struct Global {
     static let screenWidth = UIScreen.main.bounds.width
     static let screenHeight = UIScreen.main.bounds.height
+    static let navagationBarHeight: CGFloat = 64
 }

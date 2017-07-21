@@ -8,18 +8,30 @@
 
 import UIKit
 
-
+struct GLFormUX {
+    static let rowHeight: CGFloat = 40
+    static let sectionHeaderFunctionViewHeight: CGFloat = 44
+    static let sectionHeaderViewHeight: CGFloat = GLFormUX.rowHeight + GLFormUX.sectionHeaderFunctionViewHeight
+    static let fontSize: CGFloat = 15
+    static let searchViewWidth = Global.screenWidth * (2 / 3.0)
+    static let searchViewHeight: CGFloat = 150
+    static let searchTableViewRowHeight: CGFloat = 30
+}
 
 
 protocol GLFormCellDelegate: class {
-    func recordDone(_ indexPath: IndexPath, _ goodsRecord: Goods)
-    func goodsNameStringDidChange(_ name: String)
+    func cell(_ cell:GLFormCell, didFinishRecord goodsRecord: Goods)
+    func cell(_ cell: GLFormCell, goodsNameStringDidChange name: String)
+    func cell(_ cell: GLFormCell, goodsNameDidFinishEditing name: String)
+    func goodsNameBeginEditing(_ cell: GLFormCell)
+    func shouldNotBeEditing(_ cell: GLFormCell)
 }
 
 class GLFormCell: UITableViewCell, GLTextFieldDelegate {
     let columnTextFiledOriginTag = 8888
     fileprivate var columnRatio: [CGFloat] = []
     var hasLoaded: Bool = false
+    var isReadyToEdit: Bool = false
     weak var delegate: GLFormCellDelegate?
     var indexPath: IndexPath!
     var isHeader: Bool = false
@@ -81,13 +93,13 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
             tmpTf.gl_delegate = self
             tmpTf.borderStyle = .none
             tmpTf.textAlignment = .center
-            tmpTf.font = UIFont.systemFont(ofSize: 15)
+            tmpTf.font = UIFont.systemFont(ofSize: GLFormUX.fontSize)
             tmpTf.tag = columnTextFiledOriginTag + index
             tmpTf.isUserInteractionEnabled = !isHeader
             tmpTf.keyboardType = keyboardType == nil ? .default : keyboardType![index]
             #if true
                 if index == 0 {
-                    tmpTf.addTarget(self, action: #selector(textFiledValueChange(_:)), for: .valueChanged)
+                    tmpTf.addTarget(self, action: #selector(textFiledValueChange(_:)), for: .editingChanged)
                 }
             #endif
             
@@ -136,10 +148,15 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
         }
     }
     
+    func updateGoodsName(_ name: String) {
+        if let tf = viewWithTag(columnTextFiledOriginTag) as? UITextField{
+            tf.text = name
+        }
+    }
     
     @objc private func textFiledValueChange(_ textField: UITextField){
         if let validDelegate = delegate {
-            validDelegate.goodsNameStringDidChange(textField.text!)
+            validDelegate.cell(self, goodsNameStringDidChange: textField.text!)
         }
     }
 }
@@ -157,6 +174,7 @@ extension GLFormCell {
         if textField.tag + 1 - columnTextFiledOriginTag < columnRatio.count,
             let tf = viewWithTag(textField.tag + 1) as? GLTextField{
             if (textField.text?.characters.count)! > 0 {
+                goodsRecord.id = goodsRecordId
                 goodsRecord.update(type: textField.tag - columnTextFiledOriginTag, content: textField.text!)
             }
             tf.becomeFirstResponder()
@@ -175,14 +193,14 @@ extension GLFormCell {
         if (textField.text?.characters.count)! > 0 {
             goodsRecord.update(type: textField.tag - columnTextFiledOriginTag, content: textField.text!)
             goodsRecord.id = goodsRecordId
-            if textField.tag + 1 - columnTextFiledOriginTag < columnRatio.count,
-                let tf = viewWithTag(textField.tag + 1) as? GLTextField{
-                tf.becomeFirstResponder()
+            if textField.tag + 1 - columnTextFiledOriginTag < columnRatio.count{
+                textField.resignFirstResponder()
             }else {
                 if let validDelegate = delegate {
-                    validDelegate.recordDone(indexPath, goodsRecord)
+                    validDelegate.cell(self, didFinishRecord: goodsRecord)
                 }
             }
+
         } else {
             textField.resignFirstResponder()
         }
@@ -204,13 +222,29 @@ extension GLFormCell {
     
     internal func textFieldShouldStartEditing(_ textField: GLTextField) -> Bool {
         if textField.tag - columnTextFiledOriginTag == 0{
-            return true
+//            if isReadyToEdit {
+                delegate?.goodsNameBeginEditing(self)
+                return true
+//            } else {
+//                delegate?.shouldNotBeEditing(self)
+//                return false
+//            }
+            
         } else {
             if goodsRecord.name.characters.count > 0 {
                 return true
             } else {
                 GLAlertView.show("请先输入商品名称!")
                 return false
+            }
+        }
+    }
+    
+    internal func textFieldDidFinishEnditing(_ textField: GLTextField) {
+        if textField.tag - columnTextFiledOriginTag == 0 && (textField.text?.characters.count)! > 0 {
+            goodsRecord.name = textField.text!
+            if delegate != nil {
+                delegate!.cell(self, goodsNameDidFinishEditing: textField.text!)
             }
         }
     }
@@ -225,40 +259,74 @@ protocol GLFormHeaderDelegate: class{
 class GLFormHeader: UIView {
     weak var delegate: GLFormHeaderDelegate?
     private lazy var totalLabel: UILabel = {
-        let totalLabel = UILabel(frame: CGRect(x: self.frame.width / 2 + self.frame.width / 4 - 20, y: 0, width: (self.frame.width / 4), height: self.frame.height))
+        let totalLabel = UILabel(frame: CGRect(x: self.frame.width / 2 + self.frame.width / 4 - 20, y: 0, width: (self.frame.width / 4), height: GLFormUX.sectionHeaderFunctionViewHeight))
         totalLabel.text = "金额:"
+        totalLabel.adjustsFontSizeToFitWidth = true
         totalLabel.textColor = UIColor.black
         totalLabel.textAlignment = .left
         return totalLabel
     }()
     
     
-    override init(frame: CGRect) {
+    override func draw(_ rect: CGRect) {
+        let topLine = UIBezierPath()
+        topLine.move(to: CGPoint(x: 0, y: 0))
+        topLine.addLine(to: CGPoint(x: rect.width, y: 0))
+        topLine.lineWidth = 1
+        topLine.stroke()
+        
+        let bottomLine = UIBezierPath()
+        bottomLine.move(to: CGPoint(x: 0, y: GLFormUX.sectionHeaderFunctionViewHeight))
+        bottomLine.addLine(to: CGPoint(x: rect.width, y: GLFormUX.sectionHeaderFunctionViewHeight))
+        bottomLine.lineWidth = 1
+        bottomLine.stroke()
+        
+        let leftLine = UIBezierPath()
+        leftLine.move(to: CGPoint(x: 0, y: 0))
+        leftLine.addLine(to: CGPoint(x: 0, y: rect.height))
+        leftLine.lineWidth = 1
+        leftLine.stroke()
+        
+        let rightLine = UIBezierPath()
+        rightLine.move(to: CGPoint(x: rect.width, y: 0))
+        rightLine.addLine(to: CGPoint(x: rect.width, y: rect.height))
+        rightLine.lineWidth = 1
+        rightLine.stroke()
+        
+        
+    }
+    
+    init(frame: CGRect, columnRatio: [CGFloat] = [3, 3, 3, 3], defaultTitles:[String] = ["None", "None", "None", "None"]) {
         super.init(frame: frame)
+        backgroundColor = UIColor.white
         
-        layer.borderColor = UIColor.black.cgColor
-        layer.borderWidth = 1
-        
-        let previousBtn = UIButton(frame: CGRect(x: 20, y: 0, width: (frame.width / 4 - 30), height: frame.height))
+        let previousBtn = UIButton(frame: CGRect(x: 20, y: 0, width: (frame.width / 4 - 30), height: GLFormUX.sectionHeaderFunctionViewHeight))
         previousBtn.setTitle("<", for: .normal)
         previousBtn.setTitleColor(UIColor.black, for: .normal)
         previousBtn.addTarget(self, action: #selector(previousBtnDidClicked), for: .touchUpInside)
         
-        let nextBtn = UIButton(frame: CGRect(x: 20 + (frame.width / 4 - 30) + 20, y: 0, width: (frame.width / 4 - 20), height: frame.height))
+        let nextBtn = UIButton(frame: CGRect(x: 20 + (frame.width / 4 - 30) + 20, y: 0, width: (frame.width / 4 - 20), height: GLFormUX.sectionHeaderFunctionViewHeight))
         nextBtn.setTitle(">", for: .normal)
         nextBtn.setTitleColor(UIColor.black, for: .normal)
         nextBtn.addTarget(self, action: #selector(nextBtnDidClicked), for: .touchUpInside)
         
-        let printBtn = UIButton(frame: CGRect(x: frame.width / 2, y: 0, width: (frame.width / 4 - 30), height: frame.height))
+        let printBtn = UIButton(frame: CGRect(x: frame.width / 2, y: 0, width: (frame.width / 4 - 30), height: GLFormUX.sectionHeaderFunctionViewHeight))
         printBtn.setTitle("打印", for: .normal)
         printBtn.setTitleColor(UIColor.black, for: .normal)
         printBtn.addTarget(self, action: #selector(printBtnDidClicked), for: .touchUpInside)
     
+        let defaultTitleView = GLFormCell(frame: CGRect(x: 0, y: GLFormUX.sectionHeaderFunctionViewHeight, width: frame.width, height: GLFormUX.rowHeight ))
+        defaultTitleView.isHeader = true
+        defaultTitleView.backgroundColor = UIColor.white
+        defaultTitleView.loadContentView(with: columnRatio, customFrame: CGRect(x: 0, y: 0, width: frame.width, height: GLFormUX.rowHeight))
+        defaultTitleView.setDefaultTitle(defaultTitles)
+        defaultTitleView.frame = CGRect(x: 0, y: GLFormUX.sectionHeaderFunctionViewHeight, width: frame.width, height: GLFormUX.rowHeight )
         
         addSubview(previousBtn)
         addSubview(nextBtn)
         addSubview(printBtn)
         addSubview(totalLabel)
+        addSubview(defaultTitleView)
     }
     
     func updateTotal(_ total: Float){
@@ -290,6 +358,58 @@ class GLFormHeader: UIView {
     
 }
 
+protocol GLFormSearchViewDelegate: class {
+    func tableView(_ tableView: GLFormSearchView, didSelectGoodsRecord record: GoodsNameRecord, at indexPath: IndexPath)
+}
+
+class GLFormSearchView: UITableView, UITableViewDelegate, UITableViewDataSource {
+    weak var gl_delegate: GLFormSearchViewDelegate?
+    var currentIndexPath: IndexPath?
+    
+    fileprivate var searchRearchResult: [GoodsNameRecord] = []
+    
+    override init(frame: CGRect, style: UITableViewStyle) {
+        super.init(frame: frame, style: style)
+        layer.borderColor = UIColor.black.cgColor
+        layer.borderWidth = 1
+        delegate = self
+        dataSource = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func updateResult(_ result: [GoodsNameRecord]) {
+        searchRearchResult = result
+        reloadData()
+    }
+    
+    internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchRearchResult.count
+    }
+    
+    internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell")
+        if cell == nil {
+            cell = UITableViewCell(style: .default, reuseIdentifier: "SearchCell")
+        }
+        cell!.textLabel?.text = searchRearchResult[indexPath.row].name
+        return cell!
+    }
+    
+    internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return GLFormUX.searchTableViewRowHeight
+    }
+    
+    internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if gl_delegate != nil {
+            gl_delegate!.tableView(self, didSelectGoodsRecord: searchRearchResult[indexPath.row], at: indexPath)
+        }
+    }
+}
+
+
 
 
 
@@ -298,6 +418,9 @@ protocol GLFormDelegate: class {
     func gotoNextForm(_ form: GLForm)
     func gotoPreviousForm(_ form: GLForm)
     func printForm(_ form: GLForm)
+    func formDidScroll(_ form: GLForm)
+    func form(_ form: GLForm, goodsNameDidChange name: String)
+    func form(_ form: GLForm, didFinishGoodsNameEditing name: String)
 }
 
 
@@ -306,12 +429,13 @@ class GLForm: UITableView, UITableViewDelegate, UITableViewDataSource, GLFormCel
     
     weak var formDelegate: GLFormDelegate?
     var formRecord = FormRecord(id: GLDataManager.sharedInstance.getCurrentFormRecordId(), recordData: [])
-    fileprivate let defaultLine: Int = 8
+    fileprivate let defaultLine: Int = (Int(Global.screenWidth / GLFormUX.rowHeight))
     /// The sum of the array is required to equal to 12
     fileprivate var columnRatio: [CGFloat]
+    fileprivate var defaultTitles: [String]
     
     fileprivate lazy var formHeader: GLFormHeader = {
-       let header = GLFormHeader(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 44))
+        let header = GLFormHeader(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: GLFormUX.sectionHeaderViewHeight), columnRatio: self.columnRatio, defaultTitles: self.defaultTitles)
         header.delegate = self
         return header
     }()
@@ -322,17 +446,15 @@ class GLForm: UITableView, UITableViewDelegate, UITableViewDataSource, GLFormCel
     /// - Parameters:
     ///   - frame: frame
     ///   - columnRatio: 每一栏的比例
-    init(frame: CGRect, columnRatio: [CGFloat]){
+    init(frame: CGRect, columnRatio: [CGFloat], defaultTitles:[String]){
         self.columnRatio = columnRatio
+        self.defaultTitles = defaultTitles
         assert(columnRatio.reduce(0, {$0 + $1}) == 12, "The sum of the columnRatio is required to equal to 12")
         super.init(frame: frame, style: .plain)
-//        layer.borderWidth = 2
-//        layer.borderColor = UIColor.black.cgColor
         separatorStyle = .none
         bounces = false
         delegate = self
         dataSource = self
-        tableHeaderView = formHeader
         register(GLFormCell.self, forCellReuseIdentifier: "FORMCELL")
         reloadData()
     }
@@ -341,7 +463,13 @@ class GLForm: UITableView, UITableViewDelegate, UITableViewDataSource, GLFormCel
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateRecord(_ formRecord: FormRecord) {
+    func updateGoodsName(_ name: String,at IndexPath: IndexPath) {
+        if let cell = cellForRow(at: IndexPath) as? GLFormCell {
+            cell.updateGoodsName(name)
+        }
+    }
+    
+    func updateFormRecord(_ formRecord: FormRecord) {
         self.formRecord = formRecord
         reloadData()
         formHeader.updateTotal(formRecord.recordData.total())
@@ -350,32 +478,35 @@ class GLForm: UITableView, UITableViewDelegate, UITableViewDataSource, GLFormCel
             cell.turnToBeFirstResponder()
         }
     }
+    
+    func updateGoodsRecord(_ goodsRecord: Goods) {
+        if formRecord.recordData.contains(goodsRecord){
+            formRecord.recordData.update(goodsRecord)
+        } else {
+            formRecord.recordData.append(goodsRecord)
+        }
+    }
+    
 }
 // MARK: - UITableViewDelegate
 extension GLForm {
     internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60;
+        return GLFormUX.rowHeight;
     }
     
     internal func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = GLFormCell(frame: CGRect(x: 0, y: 0, width: frame.width, height: 60 ))
-        header.isHeader = true
-        header.backgroundColor = UIColor.white
-        header.loadContentView(with: columnRatio, customFrame: CGRect(x: 0, y: 0, width: frame.width, height: 60))
-        let defaultTitles = ["Name", "Specification", "Amount", "Price"]
-        header.setDefaultTitle(defaultTitles)
-        return header
+        return formHeader
     }
     
     internal func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 60
+        return formHeader.frame.size.height
     }
 }
 
 // MARK: - UITalbleViewDataSurce
 extension GLForm {
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return formRecord.recordData.count > defaultLine ? formRecord.recordData.count + 1 : defaultLine
+        return formRecord.recordData.count + defaultLine
     }
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -383,10 +514,16 @@ extension GLForm {
         if cell.hasLoaded == false {
             cell.loadContentView(with: columnRatio, keyboardType:[.default, .default, .decimalPad, .decimalPad])
         }
-        if formRecord.recordData.count > indexPath.row {
+        if formRecord.recordData.count > indexPath.row{
             cell.loadRecord(formRecord.recordData[indexPath.row])
+//            cell.isReadyToEdit = true
         } else {
             cell.loadRecord()
+//            if formRecord.recordData.count == indexPath.row {
+//                cell.isReadyToEdit = true
+//            }else{
+//              cell.isReadyToEdit = false
+//            }
         }
         cell.delegate = self
         cell.indexPath = indexPath
@@ -398,11 +535,13 @@ extension GLForm {
 // MARK: - UIScrollViewDelegate
 extension GLForm {
     internal func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if let firstResponder = UIApplication.shared.keyWindow?.perform(NSSelectorFromString("firstResponder")),
-            let currentTf = firstResponder.takeRetainedValue() as? UITextField {
-            currentTf.resignFirstResponder()
+//        UIApplication.shared.keyWindow?.endEditing(false)
+        if formDelegate != nil {
+            formDelegate?.formDidScroll(self)
         }
     }
+    
+    
 }
 
 // MARK: - GLFormHeaderDelegate
@@ -429,26 +568,46 @@ extension GLForm {
 
 // MARK: - GLFormCellDelegate
 extension GLForm {
-    func recordDone(_ indexPath: IndexPath, _ goodsRecord: Goods) {
-        if formRecord.recordData.contains(goodsRecord){
-            formRecord.recordData.update(goodsRecord)
-        } else {
-            formRecord.recordData.append(goodsRecord)
-        }
+    
+    internal func cell(_ cell: GLFormCell, didFinishRecord goodsRecord: Goods) {
+        updateGoodsRecord(goodsRecord)
+//        reloadRows(at: [cell.indexPath], with: .none)
         formHeader.updateTotal(formRecord.recordData.total())
-        reloadRows(at: [indexPath], with: .none)
+        reloadData()
         
-        let nextCellIndexPath = IndexPath(row: indexPath.row + 1, section: indexPath.section)
+        let nextCellIndexPath = IndexPath(row: cell.indexPath.row + 1, section: cell.indexPath.section)
         if let cell = cellForRow(at: nextCellIndexPath) as? GLFormCell {
             cell.turnToBeFirstResponder()
         }
     }
     
-    func goodsNameStringDidChange(_ name: String) {
-        
+    internal func cell(_ cell: GLFormCell, goodsNameStringDidChange name: String) {
+        if formDelegate != nil {
+            formDelegate!.form(self, goodsNameDidChange: name)
+        }
+    }
+    
+    internal func goodsNameBeginEditing(_ cell: GLFormCell) {
+        scrollToRow(at: cell.indexPath, at: .top, animated: true)
+    }
+    
+    internal func cell(_ cell: GLFormCell, goodsNameDidFinishEditing name: String) {
+        updateGoodsRecord(cell.goodsRecord)
+//        self.reloadData()
+        if formDelegate != nil {
+            formDelegate?.form(self, didFinishGoodsNameEditing: name)
+        }
+    }
+    
+    internal func shouldNotBeEditing(_ cell: GLFormCell) {
+//        let validRow = formRecord.recordData.count
+//        let indexPath = IndexPath(row: validRow, section: cell.indexPath.section)
+//        if let cell = cellForRow(at: indexPath) as? GLFormCell{
+//            cell.turnToBeFirstResponder()
+//            scrollToRow(at: indexPath, at: .top, animated: true)
+//        }
     }
 }
-
 
 
 
