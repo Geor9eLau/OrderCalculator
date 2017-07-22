@@ -19,7 +19,7 @@ class ViewController: UIViewController, GLFormDelegate, GLFormSearchViewDelegate
     }()
     
     fileprivate lazy var form: GLForm = {
-        let form = GLForm(frame: UIScreen.main.bounds, columnRatio: [5, 2, 2, 3], defaultTitles: ["名称", "规格", "数量", "价格"])
+        let form = GLForm(frame: UIScreen.main.bounds, columnRatio: [6, 3, 3], defaultTitles: ["名称", "数量", "价格"], keyboardType: [.default, .decimalPad, .decimalPad])
         form.formDelegate = self
         return form
     }()

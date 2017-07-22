@@ -26,9 +26,9 @@ struct Goods: Equatable, HandyJSON {
     subscript(index: Int) -> String {
         switch index{
         case 0: return name
-        case 1: return specification
-        case 2: return amount == 0 ? "" : "\(amount)"
-        case 3: return price == 0 ? "" : "\(price)"
+//        case 1: return specification
+        case 1: return amount == 0 ? "" : "\(amount)"
+        case 2: return price == 0 ? "" : "\(price)"
         default: return ""
         }
     }
@@ -36,9 +36,9 @@ struct Goods: Equatable, HandyJSON {
     mutating func update(type: Int, content: String) {
         switch type {
         case 0: name = content
-        case 1: specification = content
-        case 2: amount = Int(content)!
-        case 3: price = Float(content)!
+//        case 1: specification = content
+        case 1: amount = Int(content)!
+        case 2: price = Float(content)!
         default: break
         }
     }

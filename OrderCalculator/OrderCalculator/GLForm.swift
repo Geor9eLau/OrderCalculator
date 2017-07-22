@@ -13,6 +13,7 @@ struct GLFormUX {
     static let sectionHeaderFunctionViewHeight: CGFloat = 44
     static let sectionHeaderViewHeight: CGFloat = GLFormUX.rowHeight + GLFormUX.sectionHeaderFunctionViewHeight
     static let fontSize: CGFloat = 15
+    static let recordIDLabelWidth: CGFloat = 50
     static let searchViewWidth = Global.screenWidth * (2 / 3.0)
     static let searchViewHeight: CGFloat = 150
     static let searchTableViewRowHeight: CGFloat = 30
@@ -40,6 +41,12 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
         return "\(indexPath.row)"
     }
     
+    var recordIDLabel: UILabel = {
+        let recordIDLabel = UILabel()
+        recordIDLabel.font = UIFont.systemFont(ofSize: GLFormUX.fontSize)
+        recordIDLabel.textAlignment = .center
+        return recordIDLabel
+    }()
 
     override func draw(_ rect: CGRect) {
         UIColor.black.setStroke()
@@ -87,9 +94,13 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
             height = customFrame!.height
         }
         
-        var tmpTfOriginX:CGFloat = 0
+        recordIDLabel.frame = CGRect(x: 0, y: 0, width: GLFormUX.recordIDLabelWidth, height: height)
+        addSubview(recordIDLabel)
+        
+        var tmpTfOriginX:CGFloat = GLFormUX.recordIDLabelWidth
+        let contentWidth = width - GLFormUX.recordIDLabelWidth
         for (index, ratio) in columnRatio.enumerated() {
-            let tmpTf = GLTextField(frame: CGRect(x: tmpTfOriginX, y: 0, width: width * (ratio / 12.0), height: height))
+            let tmpTf = GLTextField(frame: CGRect(x: tmpTfOriginX, y: 0, width: contentWidth * (ratio / 12.0), height: height))
             tmpTf.gl_delegate = self
             tmpTf.borderStyle = .none
             tmpTf.textAlignment = .center
@@ -104,13 +115,13 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
             #endif
             
             addSubview(tmpTf)
-            
-            tmpTfOriginX += width * (ratio / 12.0)
-            if index < columnRatio.count - 1 {
+            if index < columnRatio.count {
                 let dividedLine = UIView(frame: CGRect(x: tmpTfOriginX, y: 0, width: 1, height: height))
                 dividedLine.backgroundColor = UIColor.black
                 addSubview(dividedLine)
             }
+            tmpTfOriginX += contentWidth * (ratio / 12.0)
+            
         }
         hasLoaded = true
     }
@@ -120,8 +131,9 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
     ///
     /// - Parameter goodsRecord: 商品数据
     func loadRecord(_ goodsRecord: Goods = Goods.default) {
+        recordIDLabel.text = "\(indexPath.row + 1)"
         self.goodsRecord = goodsRecord
-        for index in 0...3 {
+        for index in 0...2 {
             if let tmpTf = viewWithTag(columnTextFiledOriginTag + index) as? UITextField {
                 tmpTf.text = goodsRecord[index]
             }
@@ -171,13 +183,15 @@ extension GLFormCell {
             return
         }
         
-        if textField.tag + 1 - columnTextFiledOriginTag < columnRatio.count,
+        if (textField.text?.characters.count)! > 0 {
+            goodsRecord.id = goodsRecordId
+            goodsRecord.update(type: textField.tag - columnTextFiledOriginTag, content: textField.text!)
+            if textField.tag + 1 - columnTextFiledOriginTag < columnRatio.count,
             let tf = viewWithTag(textField.tag + 1) as? GLTextField{
-            if (textField.text?.characters.count)! > 0 {
-                goodsRecord.id = goodsRecordId
-                goodsRecord.update(type: textField.tag - columnTextFiledOriginTag, content: textField.text!)
+                tf.becomeFirstResponder()
+            } else {
+                delegate?.cell(self, didFinishRecord: goodsRecord)
             }
-            tf.becomeFirstResponder()
         }
     }
     
@@ -321,7 +335,7 @@ class GLFormHeader: UIView {
         defaultTitleView.loadContentView(with: columnRatio, customFrame: CGRect(x: 0, y: 0, width: frame.width, height: GLFormUX.rowHeight))
         defaultTitleView.setDefaultTitle(defaultTitles)
         defaultTitleView.frame = CGRect(x: 0, y: GLFormUX.sectionHeaderFunctionViewHeight, width: frame.width, height: GLFormUX.rowHeight )
-        
+        defaultTitleView.recordIDLabel.text = "序号"
         addSubview(previousBtn)
         addSubview(nextBtn)
         addSubview(printBtn)
@@ -330,7 +344,7 @@ class GLFormHeader: UIView {
     }
     
     func updateTotal(_ total: Float){
-        totalLabel.text = "金额:\(total)"
+        totalLabel.text = "金额: \(total)"
     }
     
     @objc private func previousBtnDidClicked() {
@@ -429,11 +443,11 @@ class GLForm: UITableView, UITableViewDelegate, UITableViewDataSource, GLFormCel
     
     weak var formDelegate: GLFormDelegate?
     var formRecord = FormRecord(id: GLDataManager.sharedInstance.getCurrentFormRecordId(), recordData: [])
-    fileprivate let defaultLine: Int = (Int(Global.screenWidth / GLFormUX.rowHeight))
+    fileprivate let defaultLine: Int = (Int(Global.screenHeight / GLFormUX.rowHeight))
     /// The sum of the array is required to equal to 12
     fileprivate var columnRatio: [CGFloat]
     fileprivate var defaultTitles: [String]
-    
+    fileprivate var keyboardType: [UIKeyboardType]
     fileprivate lazy var formHeader: GLFormHeader = {
         let header = GLFormHeader(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: GLFormUX.sectionHeaderViewHeight), columnRatio: self.columnRatio, defaultTitles: self.defaultTitles)
         header.delegate = self
@@ -446,9 +460,10 @@ class GLForm: UITableView, UITableViewDelegate, UITableViewDataSource, GLFormCel
     /// - Parameters:
     ///   - frame: frame
     ///   - columnRatio: 每一栏的比例
-    init(frame: CGRect, columnRatio: [CGFloat], defaultTitles:[String]){
+    init(frame: CGRect, columnRatio: [CGFloat], defaultTitles:[String], keyboardType: [UIKeyboardType]){
         self.columnRatio = columnRatio
         self.defaultTitles = defaultTitles
+        self.keyboardType = keyboardType
         assert(columnRatio.reduce(0, {$0 + $1}) == 12, "The sum of the columnRatio is required to equal to 12")
         super.init(frame: frame, style: .plain)
         separatorStyle = .none
@@ -511,8 +526,10 @@ extension GLForm {
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell  = tableView.dequeueReusableCell(withIdentifier: "FORMCELL", for: indexPath) as! GLFormCell
+        cell.delegate = self
+        cell.indexPath = indexPath
         if cell.hasLoaded == false {
-            cell.loadContentView(with: columnRatio, keyboardType:[.default, .default, .decimalPad, .decimalPad])
+            cell.loadContentView(with: columnRatio, keyboardType:keyboardType)
         }
         if formRecord.recordData.count > indexPath.row{
             cell.loadRecord(formRecord.recordData[indexPath.row])
@@ -525,8 +542,7 @@ extension GLForm {
 //              cell.isReadyToEdit = false
 //            }
         }
-        cell.delegate = self
-        cell.indexPath = indexPath
+        
         return cell
     }
 }
@@ -573,11 +589,13 @@ extension GLForm {
         updateGoodsRecord(goodsRecord)
 //        reloadRows(at: [cell.indexPath], with: .none)
         formHeader.updateTotal(formRecord.recordData.total())
-//        reloadData()
+        reloadData()
         
         let nextCellIndexPath = IndexPath(row: cell.indexPath.row + 1, section: cell.indexPath.section)
         if let cell = cellForRow(at: nextCellIndexPath) as? GLFormCell {
-            cell.turnToBeFirstResponder()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                cell.turnToBeFirstResponder()
+            })
         }
     }
     
