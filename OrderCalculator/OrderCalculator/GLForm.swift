@@ -13,10 +13,12 @@ struct GLFormUX {
     static let sectionHeaderFunctionViewHeight: CGFloat = 44
     static let sectionHeaderViewHeight: CGFloat = GLFormUX.rowHeight + GLFormUX.sectionHeaderFunctionViewHeight
     static let fontSize: CGFloat = 15
-    static let recordIDLabelWidth: CGFloat = 50
+    static let recordIDLabelWidth: CGFloat = 40
     static let searchViewWidth = Global.screenWidth * (2 / 3.0)
     static let searchViewHeight: CGFloat = 150
-    static let searchTableViewRowHeight: CGFloat = 30
+    static let searchTableViewRowHeight: CGFloat = 40
+    static let searchSpecificationViewWidth: CGFloat = 100
+    static let searchSpecificationViewHeight: CGFloat = 60
 }
 
 
@@ -24,8 +26,9 @@ protocol GLFormCellDelegate: class {
     func cell(_ cell:GLFormCell, didFinishRecord goodsRecord: Goods)
     func cell(_ cell: GLFormCell, goodsNameStringDidChange name: String)
     func cell(_ cell: GLFormCell, goodsNameDidFinishEditing name: String)
+    func goodsAmountDidFinishEditing(_ cell: GLFormCell)
+    func goodsPriceDidFinishEditing(_ cell: GLFormCell)
     func goodsNameBeginEditing(_ cell: GLFormCell)
-    func shouldNotBeEditing(_ cell: GLFormCell)
 }
 
 class GLFormCell: UITableViewCell, GLTextFieldDelegate {
@@ -133,13 +136,12 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
     func loadRecord(_ goodsRecord: Goods = Goods.default) {
         recordIDLabel.text = "\(indexPath.row + 1)"
         self.goodsRecord = goodsRecord
-        for index in 0...2 {
+        self.goodsRecord.id = goodsRecordId
+        for index in 0...columnRatio.count - 1 {
             if let tmpTf = viewWithTag(columnTextFiledOriginTag + index) as? UITextField {
                 tmpTf.text = goodsRecord[index]
             }
         }
-        
-        
     }
     
     
@@ -166,7 +168,14 @@ class GLFormCell: UITableViewCell, GLTextFieldDelegate {
         }
     }
     
+    func updateGoodsSpecification(_ specification: String) {
+        if let tf = viewWithTag(columnTextFiledOriginTag + 1) as? UITextField{
+            tf.text = specification
+        }
+    }
+    
     @objc private func textFiledValueChange(_ textField: UITextField){
+        goodsRecord.name = textField.text!
         if let validDelegate = delegate {
             validDelegate.cell(self, goodsNameStringDidChange: textField.text!)
         }
@@ -235,16 +244,12 @@ extension GLFormCell {
     }
     
     internal func textFieldShouldStartEditing(_ textField: GLTextField) -> Bool {
-        if textField.tag - columnTextFiledOriginTag == 0{
-//            if isReadyToEdit {
-                delegate?.goodsNameBeginEditing(self)
-                return true
-//            } else {
-//                delegate?.shouldNotBeEditing(self)
-//                return false
-//            }
-            
-        } else {
+        
+        switch textField.tag - columnTextFiledOriginTag {
+        case 0:
+            delegate?.goodsNameBeginEditing(self)
+            return true
+        default:
             if goodsRecord.name.characters.count > 0 {
                 return true
             } else {
@@ -254,13 +259,25 @@ extension GLFormCell {
         }
     }
     
+    
     internal func textFieldDidFinishEnditing(_ textField: GLTextField) {
-        if textField.tag - columnTextFiledOriginTag == 0 && (textField.text?.characters.count)! > 0 {
-            goodsRecord.name = textField.text!
-            if delegate != nil {
-                delegate!.cell(self, goodsNameDidFinishEditing: textField.text!)
+        
+        if let text = textField.text {
+            goodsRecord.update(type: textField.tag - columnTextFiledOriginTag, content: text)
+            switch textField.tag - columnTextFiledOriginTag {
+            case 0:
+                delegate?.cell(self, goodsNameDidFinishEditing: text)
+            case 2:
+                delegate?.goodsAmountDidFinishEditing(self)
+            case 3:
+                delegate?.goodsPriceDidFinishEditing(self)
+            default:
+                return
             }
         }
+        
+        
+        
     }
 }
 
@@ -314,14 +331,18 @@ class GLFormHeader: UIView {
         super.init(frame: frame)
         backgroundColor = UIColor.white
         
-        let previousBtn = UIButton(frame: CGRect(x: 20, y: 0, width: (frame.width / 4 - 30), height: GLFormUX.sectionHeaderFunctionViewHeight))
+        let previousBtn = UIButton(frame: CGRect(x: 0, y: 0, width: (frame.width / 4 - 0.5), height: GLFormUX.sectionHeaderFunctionViewHeight))
         previousBtn.setTitle("<", for: .normal)
-        previousBtn.setTitleColor(UIColor.black, for: .normal)
+        previousBtn.titleLabel?.font = UIFont.systemFont(ofSize: 25)
+        previousBtn.setTitleColor(UIColor.white, for: .normal)
+        previousBtn.backgroundColor = UIColor.lightGray
         previousBtn.addTarget(self, action: #selector(previousBtnDidClicked), for: .touchUpInside)
         
-        let nextBtn = UIButton(frame: CGRect(x: 20 + (frame.width / 4 - 30) + 20, y: 0, width: (frame.width / 4 - 20), height: GLFormUX.sectionHeaderFunctionViewHeight))
+        let nextBtn = UIButton(frame: CGRect(x: (frame.width / 4 - 0.5) + 1, y: 0, width: (frame.width / 4 - 0.5), height: GLFormUX.sectionHeaderFunctionViewHeight))
         nextBtn.setTitle(">", for: .normal)
-        nextBtn.setTitleColor(UIColor.black, for: .normal)
+        nextBtn.setTitleColor(UIColor.white, for: .normal)
+        nextBtn.titleLabel?.font = UIFont.systemFont(ofSize: 25)
+        nextBtn.backgroundColor = UIColor.lightGray
         nextBtn.addTarget(self, action: #selector(nextBtnDidClicked), for: .touchUpInside)
         
         let printBtn = UIButton(frame: CGRect(x: frame.width / 2, y: 0, width: (frame.width / 4 - 30), height: GLFormUX.sectionHeaderFunctionViewHeight))
@@ -335,7 +356,7 @@ class GLFormHeader: UIView {
         defaultTitleView.loadContentView(with: columnRatio, customFrame: CGRect(x: 0, y: 0, width: frame.width, height: GLFormUX.rowHeight))
         defaultTitleView.setDefaultTitle(defaultTitles)
         defaultTitleView.frame = CGRect(x: 0, y: GLFormUX.sectionHeaderFunctionViewHeight, width: frame.width, height: GLFormUX.rowHeight )
-        defaultTitleView.recordIDLabel.text = "序号"
+        defaultTitleView.recordIDLabel.text = "序"
         addSubview(previousBtn)
         addSubview(nextBtn)
         addSubview(printBtn)
@@ -344,7 +365,12 @@ class GLFormHeader: UIView {
     }
     
     func updateTotal(_ total: Float){
-        totalLabel.text = "金额: \(total)"
+        let totalStr = NSAttributedString(string: "\(total)", attributes: [NSForegroundColorAttributeName: UIColor.red])
+        let tmp = NSMutableAttributedString(string: "金额: ", attributes: [NSForegroundColorAttributeName: UIColor.black])
+        if total > 0 {
+            tmp.append(totalStr)
+        }
+        totalLabel.attributedText = tmp
     }
     
     @objc private func previousBtnDidClicked() {
@@ -373,14 +399,18 @@ class GLFormHeader: UIView {
 }
 
 protocol GLFormSearchViewDelegate: class {
-    func tableView(_ tableView: GLFormSearchView, didSelectGoodsRecord record: GoodsNameRecord, at indexPath: IndexPath)
+    func tableView(_ tableView: GLFormSearchView, didSelectGoods goods: Goods)
 }
 
 class GLFormSearchView: UITableView, UITableViewDelegate, UITableViewDataSource {
+    enum SearchType {
+        case goodsName
+        case goodsSpecification
+    }
+    
     weak var gl_delegate: GLFormSearchViewDelegate?
     var currentIndexPath: IndexPath?
-    
-    fileprivate var searchRearchResult: [GoodsNameRecord] = []
+    fileprivate var searchRearchResult: [Goods] = []
     
     override init(frame: CGRect, style: UITableViewStyle) {
         super.init(frame: frame, style: style)
@@ -394,7 +424,7 @@ class GLFormSearchView: UITableView, UITableViewDelegate, UITableViewDataSource 
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateResult(_ result: [GoodsNameRecord]) {
+    func updateResult(_ result: [Goods]) {
         searchRearchResult = result
         reloadData()
     }
@@ -417,8 +447,9 @@ class GLFormSearchView: UITableView, UITableViewDelegate, UITableViewDataSource 
     }
     
     internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if gl_delegate != nil {
-            gl_delegate!.tableView(self, didSelectGoodsRecord: searchRearchResult[indexPath.row], at: indexPath)
+            gl_delegate!.tableView(self, didSelectGoods: searchRearchResult[indexPath.row])
         }
     }
 }
@@ -433,8 +464,8 @@ protocol GLFormDelegate: class {
     func gotoPreviousForm(_ form: GLForm)
     func printForm(_ form: GLForm)
     func formDidScroll(_ form: GLForm)
-    func form(_ form: GLForm, goodsNameDidChange name: String)
-    func form(_ form: GLForm, didFinishGoodsNameEditing name: String)
+    func form(_ form: GLForm, goodsNameDidChange name: String, at indexPath: IndexPath)
+    func form(_ form: GLForm, didFinishGoodsNameEditing name: String, at indexPath: IndexPath)
 }
 
 
@@ -442,6 +473,7 @@ protocol GLFormDelegate: class {
 class GLForm: UITableView, UITableViewDelegate, UITableViewDataSource, GLFormCellDelegate, GLFormHeaderDelegate {
     
     weak var formDelegate: GLFormDelegate?
+    var currentIndexPath: IndexPath!
     var formRecord = FormRecord(id: GLDataManager.sharedInstance.getCurrentFormRecordId(), recordData: [])
     fileprivate let defaultLine: Int = (Int(Global.screenHeight / GLFormUX.rowHeight))
     /// The sum of the array is required to equal to 12
@@ -478,9 +510,15 @@ class GLForm: UITableView, UITableViewDelegate, UITableViewDataSource, GLFormCel
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateGoodsName(_ name: String,at IndexPath: IndexPath) {
-        if let cell = cellForRow(at: IndexPath) as? GLFormCell {
+    func updateGoodsName(_ name: String, at indexPath: IndexPath) {
+        if let cell = cellForRow(at: indexPath) as? GLFormCell {
             cell.updateGoodsName(name)
+        }
+    }
+    
+    func updateGoodsSpecification(_ specification: String, at indexPath: IndexPath) {
+        if let cell = cellForRow(at: indexPath) as? GLFormCell {
+            cell.updateGoodsSpecification(specification)
         }
     }
     
@@ -495,6 +533,7 @@ class GLForm: UITableView, UITableViewDelegate, UITableViewDataSource, GLFormCel
     }
     
     func updateGoodsRecord(_ goodsRecord: Goods) {
+        guard goodsRecord.name.characters.count > 0 else {return}
         if formRecord.recordData.contains(goodsRecord){
             formRecord.recordData.update(goodsRecord)
         } else {
@@ -516,6 +555,20 @@ extension GLForm {
     internal func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return formHeader.frame.size.height
     }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if formRecord.recordData.count > indexPath.row {
+            formRecord.recordData.remove(at: indexPath.row)
+            formHeader.updateTotal(formRecord.recordData.total())
+            reloadData()
+        } else {
+            
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .delete
+    }
 }
 
 // MARK: - UITalbleViewDataSurce
@@ -533,16 +586,10 @@ extension GLForm {
         }
         if formRecord.recordData.count > indexPath.row{
             cell.loadRecord(formRecord.recordData[indexPath.row])
-//            cell.isReadyToEdit = true
         } else {
             cell.loadRecord()
-//            if formRecord.recordData.count == indexPath.row {
-//                cell.isReadyToEdit = true
-//            }else{
-//              cell.isReadyToEdit = false
-//            }
         }
-        
+        updateGoodsRecord(cell.goodsRecord)
         return cell
     }
 }
@@ -587,7 +634,6 @@ extension GLForm {
     
     internal func cell(_ cell: GLFormCell, didFinishRecord goodsRecord: Goods) {
         updateGoodsRecord(goodsRecord)
-//        reloadRows(at: [cell.indexPath], with: .none)
         formHeader.updateTotal(formRecord.recordData.total())
         reloadData()
         
@@ -600,30 +646,33 @@ extension GLForm {
     }
     
     internal func cell(_ cell: GLFormCell, goodsNameStringDidChange name: String) {
-        if formDelegate != nil {
-            formDelegate!.form(self, goodsNameDidChange: name)
-        }
+        formDelegate?.form(self, goodsNameDidChange: name, at: cell.indexPath)
     }
     
     internal func goodsNameBeginEditing(_ cell: GLFormCell) {
-        scrollToRow(at: cell.indexPath, at: .top, animated: true)
+        currentIndexPath = cell.indexPath
+        var targetIndexPath: IndexPath
+        if currentIndexPath.row > 0 {
+            targetIndexPath = IndexPath(row: currentIndexPath.row - 1, section: currentIndexPath.section)
+        } else {
+            targetIndexPath = currentIndexPath
+        }
+        scrollToRow(at: targetIndexPath, at: .top, animated: true)
     }
     
     internal func cell(_ cell: GLFormCell, goodsNameDidFinishEditing name: String) {
         updateGoodsRecord(cell.goodsRecord)
-//        self.reloadData()
-        if formDelegate != nil {
-            formDelegate?.form(self, didFinishGoodsNameEditing: name)
-        }
+        formDelegate?.form(self, didFinishGoodsNameEditing: name, at: cell.indexPath)
     }
     
-    internal func shouldNotBeEditing(_ cell: GLFormCell) {
-//        let validRow = formRecord.recordData.count
-//        let indexPath = IndexPath(row: validRow, section: cell.indexPath.section)
-//        if let cell = cellForRow(at: indexPath) as? GLFormCell{
-//            cell.turnToBeFirstResponder()
-//            scrollToRow(at: indexPath, at: .top, animated: true)
-//        }
+    internal func goodsPriceDidFinishEditing(_ cell: GLFormCell) {
+        updateGoodsRecord(cell.goodsRecord)
+        formHeader.updateTotal(formRecord.recordData.total())
+    }
+    
+    internal func goodsAmountDidFinishEditing(_ cell: GLFormCell) {
+        updateGoodsRecord(cell.goodsRecord)
+        formHeader.updateTotal(formRecord.recordData.total())
     }
 }
 

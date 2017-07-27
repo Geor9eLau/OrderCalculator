@@ -24,4 +24,6 @@ extension Array where Element == Goods{
     func total() -> Float {
         return self.reduce(0, {$0 + $1.price * Float($1.amount)})
     }
+    
+
 }

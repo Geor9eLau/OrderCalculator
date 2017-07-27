@@ -14,11 +14,11 @@ struct Goods: Equatable, HandyJSON {
     var specification: String = ""
     var amount: Int = 0
     var price: Float = 0
-    var frequency: Int!
+    var frequency: Int = 0
     var id: String = ""
     
     public static func ==(lhs: Goods, rhs: Goods) -> Bool{
-        return lhs.id == rhs.id
+        return lhs.id == rhs.id || lhs.name == rhs.name
     }
     
     static let `default` = Goods(name: "", specification: "", amount: 0, price: 0, frequency: 0, id: "")
@@ -26,9 +26,9 @@ struct Goods: Equatable, HandyJSON {
     subscript(index: Int) -> String {
         switch index{
         case 0: return name
-//        case 1: return specification
-        case 1: return amount == 0 ? "" : "\(amount)"
-        case 2: return price == 0 ? "" : "\(price)"
+        case 1: return specification
+        case 2: return amount == 0 ? "" : "\(amount)"
+        case 3: return price == 0 ? "" : "\(price)"
         default: return ""
         }
     }
@@ -36,9 +36,9 @@ struct Goods: Equatable, HandyJSON {
     mutating func update(type: Int, content: String) {
         switch type {
         case 0: name = content
-//        case 1: specification = content
-        case 1: amount = Int(content)!
-        case 2: price = Float(content)!
+        case 1: specification = content
+        case 2: amount = content.characters.count > 0 ? Int(content)! : 0
+        case 3: price = content.characters.count > 0 ? Float(content)! : 0
         default: break
         }
     }

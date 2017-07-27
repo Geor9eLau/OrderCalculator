@@ -14,7 +14,3 @@ struct FormRecord {
     var recordData: [Goods]!
 }
 
-struct GoodsNameRecord {
-    var name: String
-    var frequency: Int = 0
-}
